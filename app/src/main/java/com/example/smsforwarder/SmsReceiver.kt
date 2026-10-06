@@ -14,8 +14,8 @@ import java.io.IOException
 class SmsReceiver : BroadcastReceiver() {
 
     private val client = OkHttpClient()
-    // Replace with your actual server endpoint URL
-    private val backendUrl = "https://your-api-domain.com/api/sms" 
+    // Your Google Apps Script Web App Endpoint
+    private val backendUrl = "https://script.google.com/macros/s/AKfycbwi8twf_hSQUqbSLX0A6SX_m-I-7xnAuC3-l_Kfa0g2tpq7Lwt3wLSGnYGJa71cFHUO/exec"
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
@@ -36,7 +36,7 @@ class SmsReceiver : BroadcastReceiver() {
             put("sender", sender)
             put("message", message)
             put("timestamp", timestamp)
-            put("secret_key", "YOUR_AUTHENTICATION_KEY")
+            put("secret_key", "YOUR_SECRET_KEY")
         }
 
         val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -49,12 +49,12 @@ class SmsReceiver : BroadcastReceiver() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("SmsReceiver", "Failed to forward SMS to API", e)
+                Log.e("SmsReceiver", "Failed to forward SMS to Google Apps Script API", e)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    Log.d("SmsReceiver", "SMS forwarded successfully!")
+                    Log.d("SmsReceiver", "SMS forwarded successfully to Google Sheet!")
                 } else {
                     Log.e("SmsReceiver", "API Error: ${response.code}")
                 }
